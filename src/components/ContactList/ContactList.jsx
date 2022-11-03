@@ -9,14 +9,14 @@ import {
 import Button from '../Button';
 
 import { Box } from '../Box';
-import { useEffect, useRef } from 'react';
+import { useMemo, useRef } from 'react';
 
 function ContactList({ contacts, filterValue, onDeleteContact }) {
-  const triggerToSetLocalStorage = useRef(1);
+  const triggerToSetLocalStorage = useRef(true);
 
-  useEffect(() => {
-    if (triggerToSetLocalStorage.current < 3) {
-      triggerToSetLocalStorage.current += 1;
+  useMemo(() => {
+    if (triggerToSetLocalStorage.current) {
+      triggerToSetLocalStorage.current = false;
       return;
     }
 
