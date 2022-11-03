@@ -16,7 +16,8 @@ function ContactList({ contacts, filterValue, onDeleteContact }) {
 
   useEffect(() => {
     if (triggerToSetLocalStorage.current < 3) {
-      return (triggerToSetLocalStorage.current += 1);
+      triggerToSetLocalStorage.current += 1;
+      return;
     }
 
     localStorage.setItem('listContacts', JSON.stringify(contacts));
