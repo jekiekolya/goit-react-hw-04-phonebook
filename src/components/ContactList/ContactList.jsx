@@ -1,4 +1,3 @@
-import { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
   ContactsList,
@@ -10,40 +9,44 @@ import {
 import Button from '../Button';
 
 import { Box } from '../Box';
+import { useEffect, useRef } from 'react';
 
-class ContactList extends Component {
-  componentDidUpdate() {
-    localStorage.setItem('listContacts', JSON.stringify(this.props.contacts));
-  }
+function ContactList({ contacts, filterValue, onDeleteContact }) {
+  const triggerToSetLocalStorage = useRef(1);
 
-  render() {
-    const { contacts, filterValue, onDeleteContact } = this.props;
-    return (
-      <Box>
-        <ContactsList>
-          {contacts
-            .filter(item => {
-              return item.name.toLocaleLowerCase().includes(filterValue);
-            })
-            .map(contact => {
-              return (
-                <ContactItem key={contact.id}>
-                  <Icon />
-                  <NameContact>
-                    {contact.name}: {contact.number}
-                  </NameContact>
-                  <Button
-                    type="button"
-                    name="Delete"
-                    onClick={() => onDeleteContact(contact.id)}
-                  />
-                </ContactItem>
-              );
-            })}
-        </ContactsList>
-      </Box>
-    );
-  }
+  useEffect(() => {
+    if (triggerToSetLocalStorage.current < 3) {
+      return (triggerToSetLocalStorage.current += 1);
+    }
+
+    localStorage.setItem('listContacts', JSON.stringify(contacts));
+  }, [contacts]);
+
+  return (
+    <Box>
+      <ContactsList>
+        {contacts
+          .filter(item => {
+            return item.name.toLocaleLowerCase().includes(filterValue);
+          })
+          .map(contact => {
+            return (
+              <ContactItem key={contact.id}>
+                <Icon />
+                <NameContact>
+                  {contact.name}: {contact.number}
+                </NameContact>
+                <Button
+                  type="button"
+                  name="Delete"
+                  onClick={() => onDeleteContact(contact.id)}
+                />
+              </ContactItem>
+            );
+          })}
+      </ContactsList>
+    </Box>
+  );
 }
 
 ContactList.propTypes = {
