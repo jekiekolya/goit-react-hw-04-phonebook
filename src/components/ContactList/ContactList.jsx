@@ -15,6 +15,7 @@ function ContactList({ contacts, filterValue, onDeleteContact }) {
   const triggerToSetLocalStorage = useRef(true);
 
   useMemo(() => {
+    console.log(triggerToSetLocalStorage.current);
     if (triggerToSetLocalStorage.current) {
       triggerToSetLocalStorage.current = false;
       return;
@@ -23,28 +24,28 @@ function ContactList({ contacts, filterValue, onDeleteContact }) {
     localStorage.setItem('listContacts', JSON.stringify(contacts));
   }, [contacts]);
 
+  const filterContacts = contacts.filter(item => {
+    return item.name.toLocaleLowerCase().includes(filterValue);
+  });
+
   return (
     <Box>
       <ContactsList>
-        {contacts
-          .filter(item => {
-            return item.name.toLocaleLowerCase().includes(filterValue);
-          })
-          .map(contact => {
-            return (
-              <ContactItem key={contact.id}>
-                <Icon />
-                <NameContact>
-                  {contact.name}: {contact.number}
-                </NameContact>
-                <Button
-                  type="button"
-                  name="Delete"
-                  onClick={() => onDeleteContact(contact.id)}
-                />
-              </ContactItem>
-            );
-          })}
+        {filterContacts.map(contact => {
+          return (
+            <ContactItem key={contact.id}>
+              <Icon />
+              <NameContact>
+                {contact.name}: {contact.number}
+              </NameContact>
+              <Button
+                type="button"
+                name="Delete"
+                onClick={() => onDeleteContact(contact.id)}
+              />
+            </ContactItem>
+          );
+        })}
       </ContactsList>
     </Box>
   );
